@@ -12,7 +12,7 @@ import (
 
 func main() {
 	st := time.Now()
-	input_path := "/home/ajeeb/sandbox/src/GMT+PrevClose/SpotData22"
+	input_path := os.Args[1]
 	paths := []string{}
 	//pathcount := 0
 	filepath.Walk(input_path, func(path string, info os.FileInfo, err error) error {
@@ -72,9 +72,14 @@ func Close_Values(inPath string, outPath string) {
 		}
 		if i != len(contents)-1 {
 			ts2, _ := strconv.ParseInt(contents[i+1][0], 10, 64)
-			if ts2-ts1 > 60 {
+			t1 := time.Unix(ts1, 0)
+			t2 := time.Unix(ts2, 0)
+			_, _, d1 := t1.Date()
+			_, _, d2 := t2.Date()
+			if d1 != d2 {
 				prev_close = c
 			}
+
 		}
 		csvWriter.Write(spot)
 		csvWriter.Flush()
